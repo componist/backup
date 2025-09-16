@@ -1,0 +1,39 @@
+{
+    "name": "componist/backup",
+    "keywords": [],
+    "homepage": "",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Componist Developer",
+            "email": "info@componist.dev",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "componist/core": "^1.0.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Componist\\Backup\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Componist\\Backup\\BackupServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
