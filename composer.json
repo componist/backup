@@ -10,9 +10,7 @@
             "role": "Developer"
         }
     ],
-    "require": {
-        "componist/core": "^1.0.0"
-    },
+    "require": {},
     "require-dev": {},
     "autoload": {
         "psr-4": {
