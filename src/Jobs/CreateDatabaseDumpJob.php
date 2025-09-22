@@ -2,18 +2,18 @@
 
 namespace Componist\Backup\Jobs;
 
-use PDO;
-use ZipArchive;
+use Componist\Backup\Notifications\BackupStatusNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Componist\Backup\Notifications\BackupStatusNotification;
+use PDO;
+use ZipArchive;
 
 class CreateDatabaseDumpJob implements ShouldQueue
 {
@@ -41,7 +41,7 @@ class CreateDatabaseDumpJob implements ShouldQueue
         $maxBackups = $config['max_backups'];
         $recipient = $config['notify_email'];
 
-        if (!File::exists($backupPath)) {
+        if (! File::exists($backupPath)) {
             File::makeDirectory($backupPath, 0755, true);
         }
 
@@ -58,7 +58,7 @@ class CreateDatabaseDumpJob implements ShouldQueue
             ]);
 
             $tables = [];
-            $stmt = $pdo->query("SHOW TABLES");
+            $stmt = $pdo->query('SHOW TABLES');
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
                 $tables[] = $row[0];
             }
@@ -72,13 +72,13 @@ class CreateDatabaseDumpJob implements ShouldQueue
                 $createStmt = $pdo->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
                 $dump .= "-- Struktur von Tabelle `$table`\n";
                 $dump .= "DROP TABLE IF EXISTS `$table`;\n";
-                $dump .= $createStmt['Create Table'] . ";\n\n";
+                $dump .= $createStmt['Create Table'].";\n\n";
 
                 // Daten
                 $rows = $pdo->query("SELECT * FROM `$table`");
                 foreach ($rows as $row) {
                     $values = array_map([$pdo, 'quote'], array_values($row));
-                    $dump .= "INSERT INTO `$table` VALUES (" . implode(", ", $values) . ");\n";
+                    $dump .= "INSERT INTO `$table` VALUES (".implode(', ', $values).");\n";
                 }
                 $dump .= "\n\n";
             }
@@ -87,20 +87,20 @@ class CreateDatabaseDumpJob implements ShouldQueue
             File::put($sqlFile, $dump);
 
             // create ZIP file
-            $zip = new ZipArchive();
+            $zip = new ZipArchive;
             if ($zip->open($zipFile, ZipArchive::CREATE) === true) {
                 $zip->addFile($sqlFile, basename($sqlFile));
                 $zip->close();
                 File::delete($sqlFile); // nur ZIP behalten
             } else {
-                throw new \Exception("ZIP konnte nicht erstellt werden.");
+                throw new \Exception('ZIP konnte nicht erstellt werden.');
             }
 
             // Log::info("Backup erfolgreich erstellt: {$zipFile}");
 
             // Old Backups delete
             $files = collect(File::files($backupPath))
-                ->sortByDesc(fn($file) => $file->getCTime());
+                ->sortByDesc(fn ($file) => $file->getCTime());
 
             if ($files->count() > $maxBackups) {
                 $filesToDelete = $files->slice($maxBackups);
@@ -111,7 +111,7 @@ class CreateDatabaseDumpJob implements ShouldQueue
             }
 
             // Notification: Seccess
-            Notification::route('mail',$recipient)->notify(new BackupStatusNotification(
+            Notification::route('mail', $recipient)->notify(new BackupStatusNotification(
                 'success',
                 "Das PDO-Datenbank-Backup wurde erfolgreich erstellt: {$zipFile}"
             ));
@@ -119,9 +119,9 @@ class CreateDatabaseDumpJob implements ShouldQueue
             // Log::error("Backup fehlgeschlagen: " . $e->getMessage());
 
             // Notification: Fail
-            Notification::route('mail',$recipient)->notify(new BackupStatusNotification(
+            Notification::route('mail', $recipient)->notify(new BackupStatusNotification(
                 'error',
-                "Das PDO-Datenbank-Backup ist fehlgeschlagen: " . $e->getMessage()
+                'Das PDO-Datenbank-Backup ist fehlgeschlagen: '.$e->getMessage()
             ));
 
             return Command::FAILURE;

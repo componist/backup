@@ -3,7 +3,6 @@
 namespace Componist\Backup\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -12,6 +11,7 @@ class BackupStatusNotification extends Notification
     use Queueable;
 
     protected $status;
+
     protected $message;
 
     public function __construct(string $status, string $message)
@@ -40,7 +40,7 @@ class BackupStatusNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject($this->status === 'success' ? '✅ Backup erfolgreich '. env('APP_NAME') : '❌ Backup fehlgeschlagen '. env('APP_NAME'))
+            ->subject($this->status === 'success' ? '✅ Backup erfolgreich '.env('APP_NAME') : '❌ Backup fehlgeschlagen '.env('APP_NAME'))
             ->line($this->message);
     }
 

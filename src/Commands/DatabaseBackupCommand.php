@@ -2,8 +2,8 @@
 
 namespace Componist\Backup\Commands;
 
-use Illuminate\Console\Command;
 use Componist\Backup\Jobs\CreateDatabaseDumpJob;
+use Illuminate\Console\Command;
 
 class DatabaseBackupCommand extends Command
 {

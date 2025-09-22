@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Componist\Backup;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Console\Scheduling\Schedule;
 use Componist\Backup\Commands\DatabaseBackupCommand;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\ServiceProvider;
 
 class BackupServiceProvider extends ServiceProvider
 {
@@ -19,6 +19,7 @@ class BackupServiceProvider extends ServiceProvider
     {
         // $this->mergeConfigFrom(__DIR__.'../../config/componist_autobackup.php', 'name');
     }
+
     /**
      * Bootstrap services.
      *
@@ -39,6 +40,6 @@ class BackupServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../config/componist_backup.php' => config_path('componist_backup.php'),
-        ],'componist_backup');
+        ], 'componist_backup');
     }
 }
