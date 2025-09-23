@@ -40,6 +40,6 @@ class BackupServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../config/componist_backup.php' => config_path('componist_backup.php'),
-        ], 'componist_backup');
+        ], 'componist.backup');
     }
 }
