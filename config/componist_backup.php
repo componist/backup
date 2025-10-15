@@ -12,4 +12,9 @@ return [
 
     // Empfänger-Adresse für Benachrichtigungen
     'notify_email' => env('BACKUP_NOTIFY_EMAIL', 'admin@deine-domain.de'),
+
+    'settings' => [
+        'send_mail_by_success' => true,
+    ],
+    'backup_daily_at' => '01:00'
 ];

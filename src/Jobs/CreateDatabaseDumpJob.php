@@ -1,5 +1,8 @@
 <?php
 
+declare(stirct_types=1);
+
+
 namespace Componist\Backup\Jobs;
 
 use Componist\Backup\Notifications\BackupStatusNotification;
@@ -18,16 +21,6 @@ use ZipArchive;
 class CreateDatabaseDumpJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Execute the job.
@@ -110,11 +103,13 @@ class CreateDatabaseDumpJob implements ShouldQueue
                 }
             }
 
-            // Notification: Seccess
-            Notification::route('mail', $recipient)->notify(new BackupStatusNotification(
-                'success',
-                "Das PDO-Datenbank-Backup wurde erfolgreich erstellt: {$zipFile}"
-            ));
+            if(file_exists(config_path('componist_backup.php')) && config('componist_backup.settings.send_mail_by_success')){
+                // Notification: Seccess
+                Notification::route('mail', $recipient)->notify(new BackupStatusNotification(
+                    'success',
+                    "Das PDO-Datenbank-Backup wurde erfolgreich erstellt: {$zipFile}"
+                ));
+            }
         } catch (\Throwable $e) {
             // Log::error("Backup fehlgeschlagen: " . $e->getMessage());
 

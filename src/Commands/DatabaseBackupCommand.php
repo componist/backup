@@ -1,5 +1,7 @@
 <?php
 
+declare(stirct_types=1);
+
 namespace Componist\Backup\Commands;
 
 use Componist\Backup\Jobs\CreateDatabaseDumpJob;

@@ -34,7 +34,7 @@ class BackupServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
-            $schedule->command('componist:db-backup')->dailyAt('01:00');
+            $schedule->command('componist:db-backup')->dailyAt(config('componist_backup.backup_daily_at'));
             // $schedule->command('componist:db-backup')->everyMinute();
         });
 

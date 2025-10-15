@@ -1,5 +1,7 @@
 <?php
 
+declare(stirct_types=1);
+
 namespace Componist\Backup\Notifications;
 
 use Illuminate\Bus\Queueable;
