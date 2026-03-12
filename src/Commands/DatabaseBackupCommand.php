@@ -1,6 +1,6 @@
 <?php
 
-declare(stirct_types=1);
+declare(strict_types=1);
 
 namespace Componist\Backup\Commands;
 
